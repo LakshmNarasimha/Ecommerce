@@ -1,4 +1,4 @@
-flask 
+flask
 mysql-connector-python
 PyJWT
-functools 
+Werkzeug
