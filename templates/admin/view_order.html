@@ -1,0 +1,66 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Order Details{% endblock %}
+
+{% block admin_content %}
+
+<div class="card">
+
+    <h2>Order Details</h2>
+
+    <hr>
+
+    <!-- BASIC ORDER INFO -->
+    <h3>Order Information</h3>
+
+    <p><strong>Order ID:</strong> {{ order.ORDERID }}</p>
+    <p><strong>User ID:</strong> {{ order.USERID }}</p>
+    <p><strong>Order Status:</strong> {{ order.ORDERSTATUS }}</p>
+    <p><strong>Payment Method:</strong> {{ order.PAYMENT_METHOD }}</p>
+    <p><strong>Payment Status:</strong> {{ order.PAYMENT_STATUS }}</p>
+    <p><strong>Order Date:</strong> {{ order.CREATED_AT.strftime('%Y-%m-%d %H:%M') }}</p>
+
+    <hr>
+
+    <!-- SHIPPING INFO -->
+    <h3>Shipping Address</h3>
+
+    <p><strong>Name:</strong> {{ order.FULLNAME }}</p>
+    <p><strong>Phone:</strong> {{ order.PHONE }}</p>
+    <p><strong>Address:</strong> {{ order.ADDRESS }}</p>
+    <p><strong>City:</strong> {{ order.CITY }}</p>
+    <p><strong>Pincode:</strong> {{ order.PINCODE }}</p>
+
+    <hr>
+
+    <!-- ORDER ITEMS -->
+    <h3>Ordered Items</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.PRODUCTNAME }}</td>
+                <td>₹ {{ item.PRODUCTPRICE }}</td>
+                <td>{{ item.QUANTITY }}</td>
+                <td>₹ {{ item.TOTALPRICE }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+
+    <h3>Total Amount: ₹ {{ order.TOTAL_AMOUNT }}</h3>
+
+</div>
+
+{% endblock %}

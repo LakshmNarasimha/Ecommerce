@@ -1,0 +1,114 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Admin Orders{% endblock %}
+
+{% block admin_content %}
+
+<div class="admin-header">
+    <h2>Orders</h2>
+</div>
+
+<!-- FILTER + STATS -->
+<div class="filter-stats">
+
+    <!-- FILTER -->
+    <form method="GET">
+        <div class="filter-box">
+            <input type="text"
+                   name="orderid"
+                   placeholder="Search by Order ID"
+                   value="{{ request.args.get('orderid','') }}">
+
+            <input type="text"
+                   name="productname"
+                   placeholder="Search by Product Name"
+                   value="{{ request.args.get('productname','') }}">
+
+
+            <input type="date" name="fromdate"
+                   value="{{ request.args.get('fromdate','') }}">
+            <input type="date" name="todate"
+                   value="{{ request.args.get('todate','') }}">
+
+            <br><br>
+
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="{{ url_for('adminorders') }}" class="btn btn-light">Reset</a>
+        </div>
+    </form>
+
+    <!-- STATS -->
+    <div class="stats">
+        <h3>Order Summary</h3>
+
+        <div class="stat-box">
+            <div>Total Orders</div>
+            <div class="stat-number">{{ total_orders }}</div>
+        </div>
+
+        <div class="stat-box">
+            <div>Filtered Orders</div>
+            <div class="stat-number">{{ filtered_order_count }}</div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ORDERS TABLE -->
+<div class="card">
+    <h3>Orders</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>User ID</th>
+                <th>Order Date</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% if orders %}
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.ORDER_ID }}</td>
+                <td>{{ order.PRODUCT_NAME }}</td>
+                <td>{{ order.USER_ID }}</td>
+                <td>{{ order.CREATED_AT.strftime('%Y-%m-%d') if order.CREATED_AT }}</td>
+                <td>₹ {{ order.TOTAL_PRICE }}</td>
+
+                <td>
+                    <span class="status
+                        {% if order.ORDER_STATUS == 'DELIVERED' %}completed
+                        {% elif order.ORDER_STATUS == 'PENDING' %}pending
+                        {% else %}shipped{% endif %}">
+                        {{ order.ORDER_STATUS }}
+                    </span>
+                </td>
+
+                <td class="actions">
+                    <a href="{{ url_for('view_order', order_id=order.ORDER_ID) }}"
+                       class="view">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="7" style="text-align:center;">No orders found</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span>
+            Showing {{ orders|length }} of {{ filtered_order_count }} entries
+        </span>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Edit Product{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_forms.css') }}">
+{% endblock %}
+
+{% block admin_content %}
+
+<div class="card">
+    <h2>Edit Product</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <div class="form-grid">
+
+            <div class="full">
+                <label>Product Name</label>
+                <input type="text" name="name"
+                       value="{{ product.NAME }}" required>
+            </div>
+
+            <div class="full">
+                <label>Description</label>
+                <textarea name="description" rows="4">{{ product.DESCRIPTION }}</textarea>
+            </div>
+
+            <div>
+                <label>Category</label>
+                <select name="category" required>
+                    <option value="Electronics" {% if product.CATEGORY_ID == 'Electronics' %}selected{% endif %}>Electronics</option>
+                    <option value="Accessories" {% if product.CATEGORY_ID == 'Accessories' %}selected{% endif %}>Accessories</option>
+                    <option value="Audio" {% if product.CATEGORY_ID == 'Audio' %}selected{% endif %}>Audio</option>
+                    <option value="Computers" {% if product.CATEGORY_ID == 'Computers' %}selected{% endif %}>Computers</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Status</label>
+                <select name="active">
+                    <option value="1" {% if product.ACTIVE == 1 %}selected{% endif %}>Active</option>
+                    <option value="0" {% if product.ACTIVE == 0 %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Price (₹)</label>
+                <input type="number" step="0.01"
+                       name="price"
+                       value="{{ product.PRICE }}" required>
+            </div>
+
+            <div>
+                <label>Stock</label>
+                <input type="number"
+                       name="stock"
+                       value="{{ product.STOCK }}" required>
+            </div>
+
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn btn-save">
+                💾 Update Product
+            </button>
+
+            <a href="{{ url_for('adminproducts') }}"
+               class="btn btn-cancel">
+                Cancel
+            </a>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

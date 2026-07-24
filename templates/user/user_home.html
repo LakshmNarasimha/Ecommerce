@@ -1,0 +1,100 @@
+{% extends "user/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user_home.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ================= HERO SECTION ================= -->
+<section class="hero">
+    <div class="hero-text">
+        <h1>Great Deals and Offers!</h1>
+        <div class="hero-buttons">
+            <a href="{{ url_for('category_products', category_name='Electronics') }}" class="btn-primary">
+                Shop Now
+            </a>
+            <a href="{{ url_for('view_cart') }}" class="btn-secondary">
+                View Cart
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ================= CATEGORY GRID ================= -->
+<section class="categories-section">
+<div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+    <!-- Electronics -->
+    <div class="category-card">
+        <h2>Electronics</h2>
+        <div class="category-items">
+            <img src="{{ url_for('static', filename='sample/laptop.png') }}">
+            <img src="{{ url_for('static', filename='sample/home theater.png') }}">
+            <img src="{{ url_for('static', filename='sample/headset.png') }}">
+            <img src="{{ url_for('static', filename='sample/mobile.jpg') }}">
+        </div>
+        <div>
+        <a href="{{ url_for('category_products', category_name='Electronics') }}" class="see-offers">
+            See all offers
+        </a></div>
+    </div>
+
+    <!-- Clothing -->
+    <div class="category-card">
+        <h2>Clothing</h2>
+        <div class="category-items">
+            <img src="{{ url_for('static', filename='sample/jacket.png') }}">
+            <img src="{{ url_for('static', filename='sample/fashion2.jpg') }}">
+            <img src="{{ url_for('static', filename='sample/fashion3.jpg') }}">
+            <img src="{{ url_for('static', filename='sample/fashion4.jpg') }}">
+        </div>
+        <a href="{{ url_for('category_products', category_name='Clothing') }}" class="see-offers">
+            See all offers
+        </a>
+    </div>
+
+    <!-- Home & Kitchen -->
+    <div class="category-card">
+        <h2>Home & Kitchen</h2>
+        <div class="category-items">
+            <img src="{{ url_for('static', filename='sample/toaster.png') }}">
+            <img src="{{ url_for('static', filename='sample/home2.jpg') }}">
+            <img src="{{ url_for('static', filename='sample/home3.jpg') }}">
+            <img src="{{ url_for('static', filename='sample/home4.jpg') }}">
+        </div>
+        <a href="{{ url_for('category_products', category_name='Home & Kitchen') }}" class="see-offers">
+            See all offers
+        </a>
+    </div>
+
+    <!-- Sports -->
+    <div class="category-card">
+        <h2>Sports & Outdoors</h2>
+        <div class="category-items">
+            <img src="{{ url_for('static', filename='sample/shoes.png') }}">
+            <img src="{{ url_for('static', filename='images/sample/bag.png') }}">
+            <img src="{{ url_for('static', filename='images/sample/dumbbell.png') }}">
+            <img src="{{ url_for('static', filename='images/sample/tent.png') }}">
+        </div>
+        <a href="{{ url_for('category_products', category_name='Sports & Outdoors') }}" class="see-offers">
+            See all offers
+        </a>
+    </div>
+
+</section>
+
+{% endblock %}

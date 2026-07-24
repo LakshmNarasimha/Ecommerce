@@ -1,0 +1,104 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Admin Users{% endblock %}
+
+{% block admin_content %}
+
+<h2>Users Management</h2>
+
+<!-- FILTER SECTION -->
+<div class="filter-box">
+    <form method="GET">
+        <input type="text"
+               name="name"
+               placeholder="Search by Name"
+               value="{{ request.args.get('name','') }}">
+
+        <input type="text"
+               name="email"
+               placeholder="Search by Email"
+               value="{{ request.args.get('email','') }}">
+
+        <select name="role">
+            <option value="">All Roles</option>
+            <option value="admin" {% if request.args.get('role') == 'admin' %}selected{% endif %}>Admin</option>
+            <option value="user" {% if request.args.get('role') == 'user' %}selected{% endif %}>User</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a href="{{ url_for('adminusers') }}" class="btn btn-light">Reset</a>
+    </form>
+</div>
+
+<!-- USERS SUMMARY -->
+<div class="info-center">
+    <div class="info-card">
+        <h3>Total Users</h3>
+        <p>{{ total_users }}</p>
+    </div>
+</div>
+
+<!-- USERS TABLE -->
+<div class="card">
+    <h3>Users List</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Profile</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Joined</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% if users %}
+            {% for user in users %}
+            <tr>
+                <td>{{ user.USERID }}</td>
+
+                <td>
+                    {% if user.PROFILE_IMAGE %}
+                        <img src="{{ url_for('static', filename=user.PROFILE_IMAGE) }}"
+                             class="profile-img">
+                    {% else %}
+                        <span class="no-img">N/A</span>
+                    {% endif %}
+                </td>
+
+                <td>{{ user.NAME }}</td>
+                <td>{{ user.EMAIL }}</td>
+                <td>{{ user.PHONE_NUMBER }}</td>
+                <td>
+                    <span class="badge {{ 'admin-badge' if user.ROLE == 'admin' else 'user-badge' }}">
+                        {{ user.ROLE }}
+                    </span>
+                </td>
+                <td>{{ user.CREATED_AT.strftime('%Y-%m-%d') }}</td>
+
+                <td>
+                    <a href="{{ url_for('view_user', userid=user.USERID) }}" class="btn-sm btn-view">
+                        View
+                    </a>
+
+                    
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="8" style="text-align:center;">No users found</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+

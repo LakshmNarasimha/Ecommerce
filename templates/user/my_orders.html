@@ -1,0 +1,103 @@
+{% extends "user/base.html" %}
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+
+<style>
+    .orders-container {
+        max-width: 1000px;
+        margin: 30px auto;
+    }
+
+    .order-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        border-left: 5px solid #007bff;
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+    }
+
+    .order-status {
+        font-weight: bold;
+    }
+
+    .status-pending { color: orange; }
+    .status-paid { color: green; }
+    .status-shipped { color: blue; }
+    .status-delivered { color: purple; }
+
+    .btn-view {
+        padding: 6px 12px;
+        background: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .empty-orders {
+        text-align: center;
+        margin-top: 50px;
+        color: gray;
+    }
+</style>
+
+<div class="orders-container">
+
+    <h2>My Orders</h2>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+
+            <div class="order-header">
+                <div>
+                    <strong>Order ID:</strong> #{{ order.ORDERID }} <br>
+                    <small>{{ order.CREATED_AT }}</small>
+                </div>
+
+                <div>
+                    <strong>₹ {{ order.TOTAL_AMOUNT }}</strong>
+                </div>
+            </div>
+
+            <p>
+                <strong>Payment:</strong>
+                {% if order.PAYMENT_STATUS == 'Paid' %}
+                    <span style="color:green;">Paid</span>
+                {% else %}
+                    <span style="color:red;">Pending</span>
+                {% endif %}
+            </p>
+
+            <p class="order-status 
+                {% if order.ORDER_STATUS == 'Pending' %}status-pending
+                {% elif order.ORDER_STATUS == 'Paid' %}status-paid
+                {% elif order.ORDER_STATUS == 'Shipped' %}status-shipped
+                {% elif order.ORDER_STATUS == 'Delivered' %}status-delivered
+                {% endif %}
+            ">
+                Order Status: {{ order.ORDER_STATUS }}
+            </p>
+
+            
+
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-orders">
+            <h4>You haven't placed any orders yet.</h4>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

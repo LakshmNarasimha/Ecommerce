@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <style>
+        .user{
+            background-color: rgb(219, 213, 213);
+            width: auto;
+            padding: 10px;
+            margin: 10px;
+           
+
+        }
+        h2{
+            background-color:  rgb(187, 186, 186);
+            height: 50px;
+            padding: 50px;
+        
+        }
+        a{
+            background-color: rgb(140, 140, 140);
+            width: auto;
+            padding: 10px;
+            margin: 2px;
+            
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce</title>
+
+</head>
+<body>
+    <h2 style="text-align: center;">User Dashboard</h2>
+    <hr>
+    <nav class="user">
+        <a href="{{ url_for('user_home') }}">Home</a>
+        <a href="{{ url_for('user_categories') }}">Categories</a>
+        <a href="{{ url_for('user_orders') }}">Orders</a>
+        <a href="{{ url_for('user_cart') }}"> Cart</a>
+        <a href="{{ url_for('user_profile') }}">Profile</a>
+    </nav>
+    
+    <hr>
+    <div>
+        <form action="">
+            <legend>What do you want?</legend>
+            <input type="text" name="search_product" class="formdata">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

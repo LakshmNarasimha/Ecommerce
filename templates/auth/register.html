@@ -1,0 +1,46 @@
+{% extends "auth/auth_base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block auth_content %}
+
+<div class="register-card">
+    <h2>Create Account</h2>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST"
+          action="{{ url_for('register') }}"
+          enctype="multipart/form-data">
+
+        <label>Full Name</label>
+        <input type="text" name="name" required>
+
+        <label>Email Address</label>
+        <input type="email" name="email" required>
+
+        <label>Phone Number</label>
+        <input type="text" name="phone" maxlength="15" required>
+
+        <label>Password</label>
+        <input type="password" name="password" required>
+
+        <label>Profile Image (optional)</label>
+        <input type="file" name="profile_image" accept="image/*">
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="login-link">
+        Already have an account?
+        <a href="{{ url_for('login') }}">Login here</a>
+    </div>
+</div>
+
+{% endblock %}

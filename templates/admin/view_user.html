@@ -1,0 +1,59 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}View User{% endblock %}
+
+{% block admin_content %}
+
+<div class="card user-view-card">
+
+    <h2>👤 User Details</h2>
+
+    <div class="user-details">
+
+        <div class="detail-row">
+            <span class="label">User ID</span>
+            <span class="value">{{ user.USERID }}</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="label">Name</span>
+            <span class="value">{{ user.NAME }}</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="label">Email</span>
+            <span class="value">{{ user.EMAIL }}</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="label">Role</span>
+            <span class="value badge {% if user.ROLE == 'admin' %}badge-admin{% else %}badge-user{% endif %}">
+                {{ user.ROLE|capitalize }}
+            </span>
+        </div>
+
+        <div class="detail-row">
+            <span class="label">Status</span>
+            {% if user.ACTIVE == 1 %}
+                <span class="badge badge-active">Active</span>
+            {% else %}
+                <span class="badge badge-inactive">Inactive</span>
+            {% endif %}
+        </div>
+
+        <div class="detail-row">
+            <span class="label">Joined On</span>
+            <span class="value">{{ user.CREATED_AT }}</span>
+        </div>
+
+    </div>
+
+    <div class="actions">
+        <a href="{{ url_for('adminusers') }}" class="btn btn-cancel">
+            ← Back to Users
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

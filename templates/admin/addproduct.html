@@ -1,0 +1,130 @@
+{% extends "admin/admin_base.html" %}
+
+{% block title %}Add Product{% endblock %}
+
+
+
+{% block admin_content %}
+
+<div class="admin-wrapper">
+
+    <!-- Sidebar already comes from admin_base.html -->
+
+    <div class="admin-content">
+
+        <div class="card">
+
+            <h2 style="margin-bottom:20px;">Add New Product</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" enctype="multipart/form-data"
+                  action="{{ url_for('adminaddproduct') }}">
+
+                <div class="form-grid">
+
+                    <div class="full">
+                        <label>Product Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+
+                    <div class="full">
+                        <label>Description</label>
+                        <textarea name="description" rows="4"></textarea>
+                    </div>
+
+                    <!-- Category Section -->
+                    <div class="full">
+                        <label>Category</label>
+
+                        <select name="category" id="categorySelect"
+                                onchange="toggleNewCategory()" required>
+
+                            <option value="">Select Category</option>
+
+                            {% for cat in categories %}
+                                <option value="{{ cat }}">{{ cat }}</option>
+                            {% endfor %}
+
+                            <option value="new">+ Add New Category</option>
+                        </select>
+
+                        <input type="text"
+                            name="new_category"
+                            id="newCategoryInput"
+                            placeholder="Enter new category"
+                            style="display:none; margin-top:10px;">
+                    </div>
+
+
+                    <div>
+                        <label>Status</label>
+                        <select name="active">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Price (₹)</label>
+                        <input type="number" name="price" step="0.01" min="0" required>
+                    </div>
+
+                    <div>
+                        <label>Stock</label>
+                        <input type="number" name="stock" min="0" required>
+                    </div>
+
+                    <div class="full">
+                        <label>Product Image</label>
+                        <div class="image-box">
+                            Choose an image (JPG / PNG)
+                        </div>
+                        <input type="file" name="image" accept="image/*">
+                    </div>
+
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn btn-save">
+                        💾 Save Product
+                    </button>
+
+                    <a href="{{ url_for('adminproducts') }}"
+                       class="btn btn-cancel">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- JS -->
+<script>
+function toggleNewCategory() {
+    var select = document.getElementById("categorySelect");
+    var input = document.getElementById("newCategoryInput");
+
+    if (select.value === "new") {
+        input.style.display = "block";
+        input.required = true;
+    } else {
+        input.style.display = "none";
+        input.required = false;
+    }
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+category_products.html
+{% extends "user/base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/category_products.css') }}">
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div style="color: green;" class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+<div class="category-container">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="filter-sidebar">
+        <h3>Filters</h3>
+
+        <form method="GET" class="filter-form">
+            <label>Min Price</label>
+            <input type="number" name="min_price" placeholder="₹ 0">
+
+            <label>Max Price</label>
+            <input type="number" name="max_price" placeholder="₹ 10000">
+
+            <button type="submit" class="filter-btn">Apply</button>
+        </form>
+
+        <hr>
+
+        <div class="sort-section">
+            <h4>Sort By</h4>
+            <a href="?sort=low" class="sort-link">Price: Low to High</a>
+            <a href="?sort=high" class="sort-link">Price: High to Low</a>
+        </div>
+    </aside>
+
+
+    <!-- ================= PRODUCTS ================= -->
+    <main class="products-section">
+        <h2 class="category-title">{{ category }}</h2>
+
+        <div class="product-grid">
+            {% for product in products %}
+             <a href="{{ url_for('user_product_details',category= product.CATEGORY , productid=product.PRODUCTID) }}" 
+                class="product-card-link">
+
+                    <div class="product-card">
+                        
+                        {% if product.IMAGE_URL %}
+                            <img src="{{ url_for('static', filename=product.IMAGE_URL) }}"
+                                alt="{{ product.NAME }}">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/no-image.png') }}"
+                                alt="No Image">
+                        {% endif %}
+
+                        
+
+                        <div class="product-info">
+                            <h4 class="product-name">{{ product.NAME }}</h4>
+
+                            <p class="product-desc">
+                                {{ product.DESCRIPTION[:100] if product.DESCRIPTION else '' }}
+                                {% if product.DESCRIPTION and product.DESCRIPTION|length > 100 %}...
+                                {% endif %}
+                            </p>
+
+                            <p class="price">₹{{ product.PRICE }}</p>
+                        </div>
+                        <div>
+                            <form method="POST" action="{{ url_for('add_to_cart') }}">
+                            <input type="hidden" name="product_id" value="{{ product.PRODUCTID }}">
+                            
+                            <button type="submit" class="cart-btn">
+                                🛒 Add to Cart
+                            </button>
+                            </form>
+                        </div>
+
+
+                    </div>
+                </a>
+            {% else %}
+            <p class="no-products">No products found.</p>
+            {% endfor %}
+        </div>
+    </main>
+
+</div>
+
+{% endblock %}

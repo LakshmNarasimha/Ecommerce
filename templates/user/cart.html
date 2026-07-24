@@ -1,0 +1,89 @@
+{% extends "user/base.html" %}
+
+{% block content %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+<div class="container" style="padding:40px;">
+
+    <h2>Your Cart</h2>
+
+    {% if cart_items %}
+
+        <table style="width:100%; margin-top:20px; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom:1px solid #ccc;">
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for item in cart_items %}
+                <tr style="text-align:center; border-bottom:1px solid #eee;">
+                    <td>
+                        {% if item.IMAGE_URL %}
+                            <img src="{{ url_for('static', filename=item.IMAGE_URL) }}" width="60">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/no-image.png') }}" width="60">
+                        {% endif %}
+
+                    </td>
+
+                    <td>{{ item.NAME }}</td>
+
+                    <td>₹{{ item.PRICE }}</td>
+
+                    <td>
+                        <form method="POST" action="{{ url_for('update_cart_quantity') }}">
+                            <input type="hidden" name="product_id" value="{{ item.PRODUCTID }}">
+                            <input type="number" name="quantity"
+                                   value="{{ item.QUANTITY }}"
+                                   min="1" style="width:60px;">
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+
+                    <td>₹{{ item.TOTAL_PRICE }}</td>
+
+                    <td>
+                        <form method="POST" action="{{ url_for('remove_from_cart') }}">
+                            <input type="hidden" name="product_id" value="{{ item.PRODUCTID }}">
+                            <button type="submit" style="color:red;">
+                                Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+
+        <div style="margin-top:30px; text-align:right;">
+            <h3>Grand Total: ₹{{ grand_total }}</h3>
+            
+            <button><a href="{{ url_for('checkout') }}" class="checkout-btn">
+                Proceed to Checkout
+            </a></button>
+        </div>
+
+    {% else %}
+        <p>Your cart is empty.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

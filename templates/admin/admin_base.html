@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+
+{% block title %} Admin Panel {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_forms.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <h2><a href="{{ url_for('admin') }}">Admin Panel</a></h2>
+
+        <a href="{{ url_for('adminproducts') }}">📦 Products</a>
+        <a href="{{ url_for('adminaddproduct') }}">➕ Add Product</a>
+        <a href="{{ url_for('adminorders') }}">🧾 Orders</a>
+        <a href="{{ url_for('adminusers') }}">👥 Users</a>
+        <a href="{{ url_for('adminprofile') }}">👤 Profile</a>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        {% block admin_content %}{% endblock %}
+    </main>
+
+</div>
+{% endblock %}

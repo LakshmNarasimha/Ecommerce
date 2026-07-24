@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Products</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background-color: #f4f6f9;
+            display: flex;
+        }
+
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            width: 230px;
+            background-color: #1f2a40;
+            min-height: 100vh;
+            color: #fff;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            padding: 20px 0;
+            margin: 0;
+            border-bottom: 1px solid #2e3b55;
+            font-size: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 20px;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #2f80ed;
+            color: #fff;
+        }
+
+        /* ================= MAIN CONTENT ================= */
+        .main {
+            margin-left: 230px;
+            padding: 20px;
+            width: calc(100% - 230px);
+        }
+
+        h2 {
+            margin-bottom: 15px;
+        }
+
+        /* ================= BUTTONS ================= */
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            cursor: pointer;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-add { background-color: #27ae60; }
+        .btn-filter { background-color: #2f80ed; }
+        .btn-reset { background-color: #6c757d; }
+        .btn-edit { background-color: #2f80ed; }
+        .btn-delete { background-color: #e74c3c; }
+
+        /* ================= FILTER ================= */
+        .filter-box {
+            background-color: white;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .filter-box input,
+        .filter-box select {
+            padding: 7px;
+            margin-right: 10px;
+        }
+
+        /* ================= PRODUCT CARDS ================= */
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 15px;
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .no-img {
+            height: 160px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            color: #777;
+        }
+
+        .card h3 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+        }
+
+        .card p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .active { color: green; font-weight: bold; }
+        .inactive { color: red; font-weight: bold; }
+
+        .card-actions {
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+<a href="{{ url_for('products') }}"> Products</a>
+    <a href="{{ url_for('addproduct') }}">Add Product</a>
+    <a href="{{ url_for('adminusers') }}">Delete Product</a>
+    <a href="{{ url_for('orders') }}"> Orders</a>
+    <a href="{{ url_for('profile') }}">profile</a>
+    <a href="#">Users</a>
+    <a href="#">Settings</a>
+    <a href="#">Logout</a>
+</div>
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+    <h2>Product Management</h2>
+
+    <a href="/admin/addproduct" class="btn btn-add">➕ Add Product</a>
+
+    <!-- FILTER -->
+    <form method="GET" class="filter-box">
+        <input type="text" name="name" placeholder="Product Name"
+               value="{{ request.args.get('name','') }}">
+
+        <select name="category">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}"
+                {% if request.args.get('category') == cat %}selected{% endif %}>
+                {{ cat }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <select name="status">
+            <option value="">All Status</option>
+            <option value="1" {% if request.args.get('status') == '1' %}selected{% endif %}>Active</option>
+            <option value="0" {% if request.args.get('status') == '0' %}selected{% endif %}>Inactive</option>
+        </select>
+
+        <button type="submit" class="btn btn-filter">Filter</button>
+        <a href="/admin/products" class="btn btn-reset">Reset</a>
+    </form>
+
+    <!-- PRODUCTS -->
+    <div class="card-container">
+        {% if products %}
+            {% for p in products %}
+            <div class="card">
+
+                {% if p.IMAGE_URL %}
+                    <img src="{{ url_for('static', filename=p.IMAGE_URL) }}">
+                {% else %}
+                    <div class="no-img">No Image</div>
+                {% endif %}
+
+                <h3>{{ p.NAME }}</h3>
+                <p>Category: {{ p.category }}</p>
+                <p class="price">₹{{ p.PRICE }}</p>
+                <p>Stock: {{ p.STOCK }}</p>
+
+                <p>
+                    Status:
+                    {% if p.ACTIVE == 1 or p.ACTIVE == '1' %}
+                        <span class="active">Active</span>
+                    {% else %}
+                        <span class="inactive">Inactive</span>
+                    {% endif %}
+                </p>
+
+                <div class="card-actions">
+                    <a href="{{ url_for('editproduct', productid=p.PRODUCTID) }}"
+                    class="btn-sm btn-edit">
+                    Edit
+                    </a>
+
+                    {% if p.ACTIVE == 1 %}
+                        <form action="{{ url_for('deactivate_product', productid=p.PRODUCTID) }}"
+                            method="POST" style="display:inline;">
+                            <button class="btn-sm btn-danger"
+                                    onclick="return confirm('Deactivate this product?')">
+                                Deactivate
+                            </button>
+                        </form>
+                    {% else %}
+                        <span class="badge badge-secondary">Deactivated</span>
+                    {% endif %}
+                </div>
+
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No products found</p>
+        {% endif %}
+    </div>
+
+</div>
+
+</body>
+</html>

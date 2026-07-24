@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Ecommerce{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="navbar">
+
+        <div class="logo">
+            <a href="{{ url_for('user') }}">Ecommerce</a>
+        </div>
+
+        <form action="{{ url_for('search') }}" method="GET" class="search-bar">
+            <input type="text" name="q" placeholder="Search ...">
+            <button type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+
+        <div class="nav-links">
+
+    {% if user_logged_in %}
+
+    <div class="profile-dropdown">
+
+        <div class="profile-btn">
+            Hello, {{ username }} <i class="fa fa-chevron-down"></i>
+        </div>
+
+        <div class="profile-menu">
+            <a href="{{ url_for('user_profile') }}">
+                <i class="fa fa-user"></i> Profile
+            </a>
+
+            <!-- ✅ MY ORDERS ADDED HERE -->
+            <a href="{{ url_for('my_orders') }}">
+                <i class="fa fa-box"></i> My Orders
+            </a>
+
+            <a href="{{ url_for('user_change_password') }}">
+                <i class="fa fa-lock"></i> Update Password
+            </a>
+
+            <a href="{{ url_for('user_logout') }}">
+                <i class="fa fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+
+    </div>
+
+    <a href="{{ url_for('view_cart') }}">
+        <i class="fa fa-shopping-cart"></i>
+    </a>
+
+    {% else %}
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('register') }}">Register</a>
+    {% endif %}
+
+</div>
+
+
+    </header>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</div>
+
+</body>
+</html>
